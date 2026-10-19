@@ -6,7 +6,9 @@ Preview locally by opening `index.html`, or capture the pages with headless Edge
 
 The privacy policy describes the app as implemented (on-device data, transient camera frames, encrypted companion link, read-only local big screen, optional account fields, Google sign-in scopes, Resend for account email, export and deletion in the app). Keep it in step with the app; the date at the top changes with every edit.
 
-Not deployed. Publishing needs a host (any static host works) and DNS for `stillpointdarts.com`; the domain's Resend records (`send`, `resend._domainkey`, `_dmarc`) must stay as they are. The Google OAuth consent screen can use `https://stillpointdarts.com/` as the homepage and `https://stillpointdarts.com/privacy.html` as the privacy policy once the site is live.
+Published at https://stillpointdarts.com from the public repo `Yesmannoman420/stillpoint-site` (GitHub Pages, `main` branch root, with `CNAME` and `.nojekyll`). DNS at Namecheap: four A records on `@` (185.199.108–111.153) and CNAME `www` to `yesmannoman420.github.io`. The domain's Resend records (`send`, `rsend`, `resend._domainkey`, `_dmarc`) must stay as they are. To publish a change, run `python3 tools/publish_site.py` from a checkout that has the site repo cloned beside it. The Google OAuth consent screen can use `https://stillpointdarts.com/` as the homepage and `https://stillpointdarts.com/privacy.html` as the privacy policy.
+
+The Cast receiver is `https://stillpointdarts.com/live/?cast`, registered in the Google Cast developer console as the custom receiver "Still Point Live" (app ID `D49F630E`, the default in `app/build.gradle`). Until it is published there, it only launches on Cast devices registered in that console.
 
 ## Live demo
 
