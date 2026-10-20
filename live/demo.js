@@ -228,7 +228,8 @@
     this.rounds.forEach(function (r, ri) {
       r.forEach(function (f) {
         // The demo's career averages follow each player's skill.
-        if (f.live) t.live.push({ home: f.home[0], away: f.away[0], round: ROUNDS[ri][0], board: 1, score: null, homeAvg: (f.home[1] * .8).toFixed(1), awayAvg: (f.away[1] * .8).toFixed(1) });
+        if (f.live) t.live.push({ home: f.home[0], away: f.away[0], round: ROUNDS[ri][0], board: 1, score: null, homeAvg: (f.home[1] * .8).toFixed(1), awayAvg: (f.away[1] * .8).toFixed(1),
+          h2h: [f.home[0].length % 4, f.away[0].length % 3 + 1] });  // invented earlier meetings
         else if (f.home && f.away && !(f.m && f.m.done) && t.next.length < 2) t.next.push({ home: f.home[0], away: f.away[0], round: ROUNDS[ri][0], board: null, score: null });
       });
     });
@@ -255,13 +256,15 @@
   var timer = null;
   function later(ms, fn) { clearTimeout(timer); timer = setTimeout(fn, ms); }
   function show(st) { live.accept(st); }
+  // An invented night so far, for the idle slides and the finished tournament's rotation.
+  var TONIGHT = { matches: 6, highs: [
+    { label: 'Best average', name: 'Anna', value: '78.4' }, { label: 'Highest checkout', name: 'Chris', value: '121' },
+    { label: 'Most 180s', name: 'Thomas', value: '3' }, { label: 'Best leg', name: 'Anna', value: '15', darts: true }] };
 
   function run() {
     var night = new Night();
     // Before the first match: the idle slides, with an invented night so far.
-    show({ match: null, tournament: null, merit: merit([]), tonight: { matches: 6, highs: [
-      { label: 'Best average', name: 'Anna', value: '78.4' }, { label: 'Highest checkout', name: 'Chris', value: '121' },
-      { label: 'Most 180s', name: 'Thomas', value: '3' }, { label: 'Best leg', name: 'Anna', value: '15', darts: true }] } });
+    show({ match: null, tournament: null, merit: merit([]), tonight: TONIGHT });
     // Watch live: the first semi-final and the final; the rest play off screen.
     var plan = [[0, 0, false], [0, 1, false], [0, 2, false], [0, 3, false], [1, 0, true], [1, 1, false], [2, 0, true]];
     var at = 0;
@@ -289,7 +292,8 @@
     }
 
     function finish() {
-      show(night.state());                              // champion, places and the Order of Merit
+      var end = night.state(); end.tonight = TONIGHT;
+      show(end);                                        // champion, places, the Order of Merit and tonight
       later(FAST ? 15000 : 45000, run);
     }
   }

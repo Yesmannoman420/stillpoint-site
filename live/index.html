@@ -196,6 +196,12 @@
   .slide.tonight .hi .v { font-size:min(11vh, 4.6vw); font-weight:900; color:var(--green); line-height:1; letter-spacing:-0.03em; }
   .slide.tonight .hi .v small { font-size:3vh; color:var(--muted); font-weight:700; letter-spacing:0; margin-left:.6vw; }
   .slide.tonight .hi .n { font-size:3.6vh; color:var(--white); font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  /* Inside a finished tournament's stage the highs sit two by two beside the champion. */
+  .staged { position:relative; height:100%; }
+  .staged .slide.tonight { gap:3vh; }
+  .staged .slide.tonight .highs { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:2vh 2vw; width:min(100%, 56vw); }
+  .staged .slide.tonight .hi { width:auto; padding:2.6vh 2vw; }
+  .staged .slide.tonight .hi .l { min-height:0; }
   .slide.board-merit { padding:0 6vw; }
   .slide.board-merit .merit { width:100%; }
   .dots { position:absolute; left:0; right:0; bottom:0; display:flex; justify-content:center; gap:.8vw; }
@@ -296,6 +302,7 @@
     'Most 180s': "Meeste 180's",
     'Best leg': 'Beste leg',
     'career average': 'carrièregemiddelde',
+    'head to head {a}–{b}': 'onderling {a}–{b}',
     'Connecting to the phone…': 'Verbinden met de telefoon…',
     'Start a match or open a tournament on the phone. It appears here at once.': 'Start een wedstrijd of open een toernooi op de telefoon. Het verschijnt hier meteen.',
     'Demo': 'Demo', 'Live': 'Live', 'Reconnecting…': 'Opnieuw verbinden…',
@@ -765,9 +772,13 @@
       var t = state.tournament;
       app.innerHTML = renderTournament(t);
       var stage = document.getElementById('stage');
-      // A finished tournament alternates its bracket with the club's Order of Merit.
-      var showMerit = t.complete && state.merit && state.merit.length && (forceMerit || Math.floor(Date.now() / 15000) % 2 === 1);
-      if (stage && showMerit) stage.innerHTML = meritView(state.merit);
+      // A finished tournament rotates its bracket with the club's Order of Merit and tonight's highs.
+      var rota = ['bracket'];
+      if (t.complete && state.merit && state.merit.length) rota.push('merit');
+      if (t.complete && state.tonight && state.tonight.highs && state.tonight.highs.length) rota.push('tonight');
+      var turn = forceMerit && rota.indexOf('merit') >= 0 ? 'merit' : rota[Math.floor(Date.now() / 15000) % rota.length];
+      if (stage && turn === 'merit') stage.innerHTML = meritView(state.merit);
+      else if (stage && turn === 'tonight') stage.innerHTML = '<div class="staged">' + tonightView(state.tonight) + '</div>';
       else if (stage && !stage.innerHTML) {
         if (t.losers && t.losers.length) {
           // Double elimination: winners bracket above, the second life and the grand final below.
@@ -827,7 +838,8 @@
     document.getElementById('callBoard').textContent = tr('Board {n}', { n: f.board });
     document.getElementById('callHome').textContent = f.home;
     document.getElementById('callAway').textContent = f.away;
-    document.getElementById('callRound').textContent = trRound(f.round);
+    // Earlier meetings between two saved players, from the host phone's archive.
+    document.getElementById('callRound').textContent = trRound(f.round) + (f.h2h ? ' · ' + tr('head to head {a}–{b}', { a: f.h2h[0], b: f.h2h[1] }) : '');
     document.getElementById('callIntro').innerHTML = walkOn(f);
     sound('walkon', 8200);
     el.className = 'show';
@@ -883,7 +895,7 @@
     noticeWins(state);
     render();
   }
-  // Rotate a finished tournament between its bracket and the Order of Merit.
+  // Rotate a finished tournament between its bracket, the Order of Merit and tonight's highs.
   setInterval(function () { if (state && !state.match && state.tournament && state.tournament.complete) render(); }, 15000);
   // Advance the attract loop between matches.
   setInterval(function () { if ((!state || (!state.match && !state.tournament)) && slideKey().key !== shownSlide) render(); }, 1000);
