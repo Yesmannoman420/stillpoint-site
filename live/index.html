@@ -187,6 +187,15 @@
   .slide.steps li { counter-increment:step; width:24vw; background:var(--surface); border-radius:2.4vh; padding:3.4vh 2vw; font-size:3.2vh; color:var(--muted); line-height:1.3; }
   .slide.steps li::before { content:counter(step); display:block; font-size:9vh; font-weight:900; color:var(--green); line-height:1; margin-bottom:1.6vh; }
   .slide.steps li b { color:var(--white); }
+  .slide.tonight { flex-direction:column; gap:4vh; }
+  .slide.tonight h2 { font-size:7vh; font-weight:900; letter-spacing:-0.03em; color:var(--paper); }
+  .slide.tonight .sub { font-size:2.8vh; color:var(--muted); margin-top:-3vh; }
+  .slide.tonight .highs { display:flex; gap:2.4vw; }
+  .slide.tonight .hi { width:19vw; background:var(--surface); border-radius:2.4vh; padding:3.4vh 2vw; display:flex; flex-direction:column; gap:1.2vh; }
+  .slide.tonight .hi .l { font-size:2.4vh; line-height:1.25; min-height:2.5em; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; font-weight:700; }
+  .slide.tonight .hi .v { font-size:min(11vh, 4.6vw); font-weight:900; color:var(--green); line-height:1; letter-spacing:-0.03em; }
+  .slide.tonight .hi .v small { font-size:3vh; color:var(--muted); font-weight:700; letter-spacing:0; margin-left:.6vw; }
+  .slide.tonight .hi .n { font-size:3.6vh; color:var(--white); font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .slide.board-merit { padding:0 6vw; }
   .slide.board-merit .merit { width:100%; }
   .dots { position:absolute; left:0; right:0; bottom:0; display:flex; justify-content:center; gap:.8vw; }
@@ -207,6 +216,14 @@
     .slide.steps li { width:84vw; font-size:4.2vw; padding:2.2vh 5vw; }
     .slide.steps li::before { font-size:9vw; margin-bottom:.8vh; }
     .slide .copy .word { font-size:22vw; }
+    .slide.tonight h2 { font-size:9vw; }
+    .slide.tonight .sub { font-size:3.6vw; margin-top:-2vh; }
+    .slide.tonight .highs { flex-wrap:wrap; justify-content:center; gap:2vh 4vw; width:88vw; }
+    .slide.tonight .hi { width:42vw; padding:2.4vh 4vw; }
+    .slide.tonight .hi .l { font-size:3vw; }
+    .slide.tonight .hi .v { font-size:10vw; }
+    .slide.tonight .hi .v small { font-size:3.6vw; }
+    .slide.tonight .hi .n { font-size:4.6vw; }
   }
   @media (prefers-reduced-motion: reduce) { .attract, .slide .brandmark .ring, .dart.next { animation:none; } }
   /* Idle and moments */
@@ -256,10 +273,10 @@
 </style>
 </head>
 <body>
-<div id="app"><div class="idle"><div class="word">Still<br>Point</div><div class="hint">Connecting to the phone…</div></div></div>
+<div id="app"><div class="idle"><div class="word">Still<br>Point</div><div class="hint" data-t="Connecting to the phone…">Connecting to the phone…</div></div></div>
 <div id="moment"><div class="big num" id="momentText">180</div><div id="momentWho"></div></div>
 <div id="leg" role="status" aria-live="polite"><div class="k" id="legTitle">Leg 1</div><div class="w" id="legWinner"></div><div class="f" id="legFacts"></div><div class="a" id="legAverages"></div><div id="legRace"></div></div>
-<div id="call" role="alert" aria-live="assertive"><div class="k">Now on</div><div class="b num" id="callBoard">Board 1</div>
+<div id="call" role="alert" aria-live="assertive"><div class="k" data-t="Now on">Now on</div><div class="b num" id="callBoard">Board 1</div>
   <div class="vs"><div class="n" id="callHome"></div><div class="v">v</div><div class="n" id="callAway"></div></div><div class="intro" id="callIntro"></div><div class="r" id="callRound"></div></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
 <script>
@@ -268,6 +285,73 @@
   var connected = false, state = null, lastTotals = null;
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  /* Language: the phone sends "lang" with each state; ?lang= on the address wins. English is the default. */
+  var NL = {
+    'Tonight': 'Vanavond',
+    '1 match played': '1 wedstrijd gespeeld',
+    '{n} matches played': '{n} wedstrijden gespeeld',
+    'darts': 'pijlen',
+    'Best average': 'Beste gemiddelde',
+    'Highest checkout': 'Hoogste finish',
+    'Most 180s': "Meeste 180's",
+    'Best leg': 'Beste leg',
+    'career average': 'carrièregemiddelde',
+    'Connecting to the phone…': 'Verbinden met de telefoon…',
+    'Start a match or open a tournament on the phone. It appears here at once.': 'Start een wedstrijd of open een toernooi op de telefoon. Het verschijnt hier meteen.',
+    'Demo': 'Demo', 'Live': 'Live', 'Reconnecting…': 'Opnieuw verbinden…',
+    'Click or press OK for sound': 'Klik of druk op OK voor geluid',
+    'Board {n}': 'Bord {n}', 'Now on': 'Nu op',
+    '{name} wins': '{name} wint', 'Game complete': 'Spel afgelopen', 'Paused': 'Gepauzeerd',
+    '3-dart average': '3-dart gemiddelde', '3-dart average through the match': '3-dart gemiddelde door de wedstrijd',
+    'leg': 'leg', 'legs': 'legs', '{n} sets': '{n} sets',
+    'Sets {n}': 'Sets {n}', 'Legs {n}': 'Legs {n}',
+    'Bust': 'Bust', 'Throwing': 'Gooit', '{n} avg': '{n} gem.', 'Last {n}': 'Laatste {n}',
+    'Checkout': 'Checkout', 'Target': 'Doel',
+    'Third place': 'Derde plaats',
+    'Player': 'Speler', 'P': 'G', 'W': 'W', 'Pts': 'Ptn',
+    'Order of Merit': 'Order of Merit', 'Points from every finished tournament': 'Punten uit elk afgerond toernooi',
+    '{n} played': '{n} gespeeld', 'title': 'titel', 'titles': 'titels',
+    'Final places': 'Eindstand', 'Champion': 'Kampioen', 'Runner-up {name}': 'Tweede {name}', 'Third {name}': 'Derde {name}',
+    'On the boards': 'Op de borden', 'Up next': 'Hierna', 'Waiting for results': 'Wachten op uitslagen',
+    'Play on the big screen': 'Speel op het grote scherm',
+    'Start a match': 'Start een wedstrijd', 'on the phone. The scores appear here at once.': 'op de telefoon. De scores verschijnen hier meteen.',
+    'Throw.': 'Gooi.', 'The camera counts every dart; the room sees the score and the checkout.': 'De camera telt elke dart; de zaal ziet de score en de uitgooi.',
+    'Run a tournament': 'Speel een toernooi', 'and this screen calls the matches and crowns the champion.': 'en dit scherm roept de wedstrijden om en kroont de kampioen.',
+    '{n} out': '{n} uit',
+    'Losers bracket': 'Verliezersschema', 'Grand final': 'Grote finale',
+    'Beat {name}': 'Won van {name}', 'Lost to {name}': 'Verloren van {name}',
+    'Set {n}': 'Set {n}', 'Leg {n}': 'Leg {n}', '{name} takes it': '{name} wint de leg', '{n} darts \u00b7 {c} out': '{n} pijlen \u00b7 {c} uit',
+    'Final': 'Finale', 'Finals': 'Finales', 'Semi-final': 'Halve finale', 'Semi-finals': 'Halve finales',
+    'Quarter-final': 'Kwartfinale', 'Quarter-finals': 'Kwartfinales', 'Round of {n}': 'Laatste {n}', 'Round {n}': 'Ronde {n}',
+    'Group stage': 'Groepsfase', 'Knockout': 'Knock-out', 'Winner': 'Winnaar'
+  };
+  var pinnedLang = (location.search.match(/[?&]lang=(\w+)/) || [])[1];
+  var lang = 'en';
+  /* tr(s, vars): the Dutch for s when the phone is in Dutch (else s), with {name} placeholders filled in. */
+  function tr(s, vars) {
+    var out = lang === 'nl' && NL.hasOwnProperty(s) ? NL[s] : s;
+    if (vars) out = out.replace(/\{(\w+)\}/g, function (m, k) { return vars.hasOwnProperty(k) ? vars[k] : m; });
+    return out;
+  }
+  /* Round names come from the phone in English; the usual ones are translated, anything else passes through. */
+  function trRound(n) {
+    n = String(n == null ? '' : n);
+    var m = /^Round of (\d+)$/.exec(n) || /^Round (\d+)$/.exec(n);
+    if (m) return tr(n.indexOf('of') > 0 ? 'Round of {n}' : 'Round {n}', { n: m[1] });
+    return tr(n);
+  }
+  function applyStatic() {
+    var els = document.querySelectorAll('[data-t]');
+    for (var i = 0; i < els.length; i++) els[i].textContent = tr(els[i].getAttribute('data-t'));
+    document.documentElement.setAttribute('lang', lang);
+  }
+  function setLang(name) {
+    name = pinnedLang || name;
+    var next = name === 'nl' ? 'nl' : 'en';
+    if (next === lang) return;
+    lang = next;
+    applyStatic();
+  }
   function initial(n) { n = String(n || '').trim(); return n ? esc(n.charAt(0).toUpperCase()) : '?'; }
 
   /* The Still Point mark (brand/logo_notext.png) as vector, so it is sharp on a 4K screen. */
@@ -295,8 +379,8 @@
   function footer() {
     var t = state && state.match && state.match.tournament;
     return '<footer><span class="mark">' + mark() + 'Still Point</span><span class="dot' + (connected ? '' : ' off') + '"></span>' +
-      '<span>' + (demo ? 'Demo' : connected ? 'Live' : 'Reconnecting…') + '</span>' + (soundLocked ? '<span class="snd">Click or press OK for sound</span>' : '') + '<span class="grow"></span>' +
-      (t ? '<span>' + esc(t.name) + (t.board ? ' · Board ' + esc(t.board) : '') + '</span>' : '') + '</footer>';
+      '<span>' + tr(demo ? 'Demo' : connected ? 'Live' : 'Reconnecting…') + '</span>' + (soundLocked ? '<span class="snd">' + tr('Click or press OK for sound') + '</span>' : '') + '<span class="grow"></span>' +
+      (t ? '<span>' + esc(t.name) + (t.board ? ' · ' + tr('Board {n}', { n: esc(t.board) }) : '') + '</span>' : '') + '</footer>';
   }
 
   /* A dartboard with the visit's beds lit. The scorer reports a bed (T20, S5), not a point on the
@@ -386,7 +470,7 @@
     if (hi - lo < 40) hi = lo + 40;
     var grid = []; for (var g = lo; g <= hi; g += 20) grid.push(g);
     var svg = chart(series, mo.map(function (p) { return p.name; }), { lo: lo, hi: hi, grid: grid, height: 260, label: function (v) { return v.toFixed(1); } });
-    return svg ? svg + '<div class="cap">3-dart average through the match</div>' : '';
+    return svg ? svg + '<div class="cap">' + tr('3-dart average through the match') + '</div>' : '';
   }
 
   function dartCells(m) {
@@ -400,15 +484,16 @@
 
   function renderMatch(m) {
     var t = m.tournament;
-    var head = '<header><div class="title">' + esc(t ? t.round + ' · ' + m.title : m.title) + '</div><div class="context">' +
-      esc(m.paused ? 'Paused' : m.context) + '</div></header>';
+    var head = '<header><div class="title">' + esc(t ? trRound(t.round) + ' · ' + m.title : m.title) + '</div><div class="context">' +
+      esc(m.paused ? tr('Paused') : trRound(m.context)) + '</div></header>';
     if (m.complete) {
       var winner = String(m.result || '').replace(' wins', '');
+      var resultText = / wins$/.test(m.result || '') ? tr('{name} wins', { name: winner }) : tr(m.result || 'Game complete');
       var momentum = momentumChart(m);
-      return head + '<main><div class="result' + (momentum ? ' charted' : '') + '"><div class="headline">' + esc(m.result || 'Game complete') + '</div><div class="cards">' +
+      return head + '<main><div class="result' + (momentum ? ' charted' : '') + '"><div class="headline">' + esc(resultText) + '</div><div class="cards">' +
         m.players.slice(0, 4).map(function (p) {
           return '<div class="card' + (p.name === winner ? ' win' : '') + '"><div class="nm">' + esc(p.name) + '</div><div class="av num">' + esc(p.average || '—') +
-            '</div><div class="lg">3-dart average' + (m.showLegs ? ' · ' + (p.sets ? p.sets + ' sets · ' : '') + p.legs + (p.legs === 1 ? ' leg' : ' legs') : '') + '</div></div>';
+            '</div><div class="lg">' + tr('3-dart average') + (m.showLegs ? ' · ' + (p.sets ? tr('{n} sets', { n: p.sets }) + ' · ' : '') + p.legs + ' ' + tr(p.legs === 1 ? 'leg' : 'legs') : '') + '</div></div>';
         }).join('') + '</div>' + momentum + '</div></main>' + footer();
     }
     var many = m.players.length > 2;
@@ -416,31 +501,31 @@
     if (m.players.length <= 2) {
       body = m.players.map(function (p, i) {
         var active = i === m.current;
-        var legs = m.showLegs ? (p.sets ? 'Sets ' + p.sets + ' · ' : '') + 'Legs ' + p.legs : '';
+        var legs = m.showLegs ? (p.sets ? tr('Sets {n}', { n: p.sets }) + ' · ' : '') + tr('Legs {n}', { n: p.legs }) : '';
         return '<section class="panel' + (active ? (m.bust ? ' bust' : ' active') : '') + '">' +
           '<div class="who"><div class="avatar">' + initial(p.name) + '</div><div class="name">' + esc(p.name) + '</div>' +
-          '<div class="badge' + (active ? ' throwing' : '') + '">' + (active ? (m.bust ? 'Bust' + (m.bustReason ? ' · ' + esc(m.bustReason) : '') : 'Throwing') : esc(legs)) + '</div></div>' +
+          '<div class="badge' + (active ? ' throwing' : '') + '">' + (active ? (m.bust ? tr('Bust') + (m.bustReason ? ' · ' + esc(tr(m.bustReason)) : '') : tr('Throwing')) : esc(legs)) + '</div></div>' +
           '<div class="score num">' + esc(p.score) + '</div>' +
-          '<div class="foot"><div class="stack"><div class="facts">' + (active && legs ? '<span>' + esc(legs) + '</span>' : '') + (p.average ? '<span><b>' + esc(p.average) + '</b> avg</span>' : '') +
-          (!active && p.lastTotal ? '<span>Last <b>' + esc(p.lastTotal) + '</b></span>' : '') + '</div>' +
-          (active && m.checkout && m.checkout.length ? '<div class="checkout"><small>Checkout</small>' + m.checkout.map(esc).join(' &nbsp;') + '</div>' : '') +
-          (active && m.target ? '<div class="checkout"><small>Target</small>' + esc(m.target) + '</div>' : '') +
+          '<div class="foot"><div class="stack"><div class="facts">' + (active && legs ? '<span>' + esc(legs) + '</span>' : '') + (p.average ? '<span><b>' + esc(p.average) + '</b> ' + tr('{n} avg', { n: '' }).replace(/^\s+|\s+$/g, '') + '</span>' : '') +
+          (!active && p.lastTotal ? '<span>' + tr('Last {n}', { n: '<b>' + esc(p.lastTotal) + '</b>' }) + '</span>' : '') + '</div>' +
+          (active && m.checkout && m.checkout.length ? '<div class="checkout"><small>' + tr('Checkout') + '</small>' + m.checkout.map(esc).join(' &nbsp;') + '</div>' : '') +
+          (active && m.target ? '<div class="checkout"><small>' + tr('Target') + '</small>' + esc(m.target) + '</div>' : '') +
           (active ? '<div class="darts">' + dartCells(m) + '</div>' : (p.last && p.last.length ? '<div class="last">' + p.last.map(esc).join(' · ') + '</div>' : '')) +
           '</div>' + (m.mode === 'X01' && (active || (p.last && p.last.length)) ? boardSvg(active ? m.darts : p.last) : '') + '</div></section>';
       }).join('');
     } else {
       body = '<div class="rows many">' + m.players.map(function (p, i) {
         return '<div class="row' + (i === m.current ? ' active' : '') + '"><div class="avatar">' + initial(p.name) + '</div><div class="name">' + esc(p.name) +
-          '</div><div class="badge">' + (p.average ? esc(p.average) + ' avg' : '') + '</div><div class="score num">' + esc(p.score) + '</div></div>';
+          '</div><div class="badge">' + (p.average ? tr('{n} avg', { n: esc(p.average) }) : '') + '</div><div class="score num">' + esc(p.score) + '</div></div>';
       }).join('') + '</div>';
     }
     return head + '<main>' + body + '</main>' + footer();
   }
 
   function fixture(f) {
-    return '<div class="fix' + (f.board ? ' live' : '') + '"><div class="vs"><div>' + esc(f.home) + ' v ' + esc(f.away) + '</div><div>' + esc(f.round) + '</div></div>' +
+    return '<div class="fix' + (f.board ? ' live' : '') + '"><div class="vs"><div>' + esc(f.home) + ' v ' + esc(f.away) + '</div><div>' + esc(trRound(f.round)) + '</div></div>' +
       (f.score ? '<div class="board num" style="color:var(--white)">' + esc(f.score) + '</div>' : '') +
-      (f.board ? '<div class="board">Board ' + esc(f.board) + '</div>' : '') + '</div>';
+      (f.board ? '<div class="board">' + tr('Board {n}', { n: esc(f.board) }) + '</div>' : '') + '</div>';
   }
 
   /* The bracket fills the stage it is given: its shape follows the screen, so a TV gets big cards. */
@@ -465,7 +550,7 @@
       return s + '</g>';
     }
     rounds.forEach(function (r, ri) {
-      out += '<text x="' + (ri * colW + 4) + '" y="28" font-size="26" font-weight="800" style="fill:var(--muted)">' + esc(roundTitle(r.name)) + '</text>';
+      out += '<text x="' + (ri * colW + 4) + '" y="28" font-size="26" font-weight="800" style="fill:var(--muted)">' + esc(trRound(roundTitle(r.name))) + '</text>';
       var span = Math.pow(2, ri) * unit;
       r.matches.forEach(function (f, i) {
         var cy = top + (i + 0.5) * span, x = ri * colW, h = unit * 0.8;
@@ -478,7 +563,7 @@
     });
     if (t.third) {
       var tx = (cols - 1) * colW;
-      out += '<text x="' + tx + '" y="' + (top + first * unit + 30) + '" font-size="20" style="fill:var(--muted)" font-weight="800">Third place</text>' + card(tx, top + first * unit + 44, t.third, 80);
+      out += '<text x="' + tx + '" y="' + (top + first * unit + 30) + '" font-size="20" style="fill:var(--muted)" font-weight="800">' + esc(tr('Third place')) + '</text>' + card(tx, top + first * unit + 44, t.third, 80);
     }
     return out + '</svg>';
   }
@@ -497,7 +582,7 @@
     var most = 1; t.tables.forEach(function (tb) { most = Math.max(most, tb.rows.length); });
     var size = Math.max(2.6, Math.min(4.6, (t.tables.length > 2 ? 30 : 58) / most));
     return '<div class="tables" style="--table:' + size.toFixed(2) + 'vh">' + t.tables.map(function (tb) {
-      return '<div><h3>' + esc(tb.name) + '</h3><table><tr><th></th><th>Player</th><th>P</th><th>W</th><th>+/−</th><th>Pts</th></tr>' +
+      return '<div><h3>' + esc(tb.name) + '</h3><table><tr><th></th><th>' + tr('Player') + '</th><th>' + tr('P') + '</th><th>' + tr('W') + '</th><th>+/−</th><th>' + tr('Pts') + '</th></tr>' +
         tb.rows.map(function (r) {
           return '<tr class="' + (r.through ? 'through' : '') + '"><td>' + esc(r.rank) + '</td><td>' + esc(r.name) + '</td><td>' + esc(r.p) + '</td><td>' + esc(r.w) +
             '</td><td>' + (r.diff > 0 ? '+' : '') + esc(r.diff) + '</td><td>' + esc(r.pts) + '</td></tr>';
@@ -510,32 +595,42 @@
   function medal(p) { return p === 1 ? 'gold' : p === 2 ? 'silver' : p === 3 ? 'bronze' : ''; }
 
   /** The club ranking: rank, name, last finishes, points. Rows shrink to fit up to twelve. */
+  /* Tonight's highs across the host phone's finished X01 matches; the phone leaves out empty ones. */
+  function tonightView(t) {
+    var n = t.matches;
+    return '<div class="slide tonight"><h2>' + tr('Tonight') + '</h2><div class="sub">' + tr(n === 1 ? '1 match played' : '{n} matches played', { n: esc(n) }) + '</div>' +
+      '<div class="highs">' + t.highs.map(function (h) {
+        return '<div class="hi"><div class="l">' + esc(tr(h.label)) + '</div><div class="v num">' + esc(h.value) + (h.darts ? '<small>' + tr('darts') + '</small>' : '') +
+          '</div><div class="n">' + esc(h.name) + '</div></div>';
+      }).join('') + '</div></div>';
+  }
+
   function meritView(rows) {
     var size = Math.max(2.2, Math.min(4.2, (66 / Math.max(rows.length, 1) - 3) / 1.3));
-    return '<div class="merit" style="--mrow:' + size.toFixed(2) + 'vh"><h2>Order of Merit</h2><div class="sub">Points from every finished tournament</div>' +
+    return '<div class="merit" style="--mrow:' + size.toFixed(2) + 'vh"><h2>' + tr('Order of Merit') + '</h2><div class="sub">' + tr('Points from every finished tournament') + '</div>' +
       rows.map(function (r) {
         return '<div class="mrow"><div class="rk ' + medal(r.rank) + '">' + (r.shared ? '=' : esc(r.rank)) + '</div><div class="nm">' + esc(r.name) +
-          '</div><div class="ev">' + esc(r.events) + ' played' + (r.titles ? ' · ' + esc(r.titles) + (r.titles === 1 ? ' title' : ' titles') : '') + '</div>' +
+          '</div><div class="ev">' + tr('{n} played', { n: esc(r.events) }) + (r.titles ? ' · ' + esc(r.titles) + ' ' + tr(r.titles === 1 ? 'title' : 'titles') : '') + '</div>' +
           '<div class="form">' + (r.recent || []).map(function (p) { return '<i class="' + medal(p) + '">' + esc(p) + '</i>'; }).join('') + '</div>' +
           '<div class="pt num">' + esc(r.points) + '</div></div>';
       }).join('') + '</div>';
   }
 
   function renderTournament(t) {
-    var head = '<header><div class="title">' + esc(t.name) + '</div><div class="context">' + esc(t.complete ? 'Final places' : t.phase) + '</div></header>';
+    var head = '<header><div class="title">' + esc(t.name) + '</div><div class="context">' + esc(t.complete ? tr('Final places') : trRound(t.phase)) + '</div></header>';
     var side = '<div class="side">';
     if (t.complete) {
-      side += '<div class="champion">' + TROPHY + '<div class="k">Champion</div><div class="n">' + esc(t.champion) + '</div>' +
-        (t.runnerUp ? '<div class="p">Runner-up ' + esc(t.runnerUp) + (t.thirdName ? ' · Third ' + esc(t.thirdName) : '') + '</div>' : '') + '</div>';
+      side += '<div class="champion">' + TROPHY + '<div class="k">' + tr('Champion') + '</div><div class="n">' + esc(t.champion) + '</div>' +
+        (t.runnerUp ? '<div class="p">' + tr('Runner-up {name}', { name: esc(t.runnerUp) }) + (t.thirdName ? ' · ' + tr('Third {name}', { name: esc(t.thirdName) }) : '') + '</div>' : '') + '</div>';
       var rest = (t.places || []).slice(1);
-      if (rest.length) side += '<div class="label">Final places</div>' + rest.map(function (p, i) {
+      if (rest.length) side += '<div class="label">' + tr('Final places') + '</div>' + rest.map(function (p, i) {
         var shared = i > 0 && rest[i - 1].place === p.place;
         return '<div class="pl"><div class="rk ' + medal(p.place) + '">' + (shared ? '=' : esc(p.place)) + '</div><div class="nm">' + esc(p.name) + '</div><div class="lb2">+' + esc(p.pts) + '</div></div>';
       }).join('');
     } else {
-      if (t.live.length) side += '<div class="label">On the boards</div>' + t.live.map(fixture).join('');
-      if (t.next.length) side += '<div class="label">Up next</div>' + t.next.map(fixture).join('');
-      if (!t.live.length && !t.next.length) side += '<div class="label">Waiting for results</div>';
+      if (t.live.length) side += '<div class="label">' + tr('On the boards') + '</div>' + t.live.map(fixture).join('');
+      if (t.next.length) side += '<div class="label">' + tr('Up next') + '</div>' + t.next.map(fixture).join('');
+      if (!t.live.length && !t.next.length) side += '<div class="label">' + tr('Waiting for results') + '</div>';
     }
     side += '</div>';
     var showTables = t.tables.length && (!t.rounds.length || t.groupsOpen);
@@ -547,6 +642,7 @@
   function slides() {
     var list = ['brand', 'steps'];
     if (state && state.merit && state.merit.length) list.splice(1, 0, 'merit');
+    if (state && state.tonight && state.tonight.highs && state.tonight.highs.length) list.splice(1, 0, 'tonight');
     return list;
   }
   function slideKey() {
@@ -561,12 +657,13 @@
     shownSlide = k.key;
     var kind = list[which], body;
     if (kind === 'merit') body = '<div class="slide board-merit">' + meritView(state.merit) + '</div>';
-    else if (kind === 'steps') body = '<div class="slide steps"><h2>Play on the big screen</h2><ol>' +
-      '<li><b>Start a match</b> on the phone. The scores appear here at once.</li>' +
-      '<li><b>Throw.</b> The camera counts every dart; the room sees the score and the checkout.</li>' +
-      '<li><b>Run a tournament</b> and this screen calls the matches and crowns the champion.</li></ol></div>';
+    else if (kind === 'tonight') body = tonightView(state.tonight);
+    else if (kind === 'steps') body = '<div class="slide steps"><h2>' + tr('Play on the big screen') + '</h2><ol>' +
+      '<li><b>' + tr('Start a match') + '</b> ' + tr('on the phone. The scores appear here at once.') + '</li>' +
+      '<li><b>' + tr('Throw.') + '</b> ' + tr('The camera counts every dart; the room sees the score and the checkout.') + '</li>' +
+      '<li><b>' + tr('Run a tournament') + '</b> ' + tr('and this screen calls the matches and crowns the champion.') + '</li></ol></div>';
     else body = '<div class="slide">' + mark('brandmark') + '<div class="copy"><div class="word">Still<br>Point</div>' +
-      '<div class="hint">' + (state ? 'Start a match or open a tournament on the phone. It appears here at once.' : 'Connecting to the phone…') + '</div></div></div>';
+      '<div class="hint">' + tr(state ? 'Start a match or open a tournament on the phone. It appears here at once.' : 'Connecting to the phone…') + '</div></div></div>';
     var dots = list.length > 1 ? '<div class="dots">' + list.map(function (k, i) { return '<i class="' + (i === which ? 'on' : '') + '"></i>'; }).join('') + '</div>' : '';
     return '<main><div class="attract">' + body + dots + '</div></main>' + footer();
   }
@@ -580,7 +677,7 @@
       if (totals[i] !== before[i] && totals[i] != null) {
         var pts = parseInt(String(totals[i]).replace('Total ', ''), 10);
         // Finishes of 100 and more are called from the leg (noticeLeg); a game without legs is called here.
-        var text = pts === 180 ? '180' : (m.complete && pts >= 100 && !m.lastLeg ? pts + ' out' : null);
+        var text = pts === 180 ? '180' : (m.complete && pts >= 100 && !m.lastLeg ? tr('{n} out', { n: pts }) : null);
         if (text) { callout(text, m.players[i].name, pts === 180); sound(pts === 180 ? '180' : 'bigout'); }
         return;
       }
@@ -676,9 +773,9 @@
           // Double elimination: winners bracket above, the second life and the grand final below.
           var h = stage.clientHeight;
           stage.innerHTML = '<div style="height:58%">' + bracket(t, stage.clientWidth, h * 0.58) + '</div>' +
-            '<div class="label">Losers bracket</div><div class="lb">' + t.losers.map(function (r) {
-              return '<div class="lbcol"><div class="lbt">' + esc(r.name) + '</div>' + r.matches.map(mini).join('') + '</div>';
-            }).join('') + (t.grand && t.grand.length ? '<div class="lbcol"><div class="lbt">Grand final</div>' + t.grand.map(mini).join('') + '</div>' : '') + '</div>';
+            '<div class="label">' + tr('Losers bracket') + '</div><div class="lb">' + t.losers.map(function (r) {
+              return '<div class="lbcol"><div class="lbt">' + esc(trRound(r.name)) + '</div>' + r.matches.map(mini).join('') + '</div>';
+            }).join('') + (t.grand && t.grand.length ? '<div class="lbcol"><div class="lbt">' + tr('Grand final') + '</div>' + t.grand.map(mini).join('') + '</div>' : '') + '</div>';
         } else stage.innerHTML = bracket(t, stage.clientWidth, stage.clientHeight);
       }
     }
@@ -697,11 +794,13 @@
   }
   /* What the room should know about a player walking on: their place on the Order of Merit, titles,
      recent finishes, and how they got here tonight. Read from state the TV already has; nothing is invented. */
-  function introFor(name, t) {
+  function introFor(name, t, avg) {
     var lines = [], merit = (state && state.merit) || [];
+    // Career 3-dart average from the host phone's match archive; saved players only.
+    if (avg != null) lines.push('<div><b>' + esc(avg) + '</b> ' + tr('career average') + '</div>');
     var row = merit.filter(function (r) { return r.name === name; })[0];
     if (row) {
-      lines.push('<div><b>#' + esc(row.rank) + '</b> Order of Merit' + (row.titles ? ' · <b>' + esc(row.titles) + '</b> ' + (row.titles === 1 ? 'title' : 'titles') : '') + '</div>');
+      lines.push('<div><b>#' + esc(row.rank) + '</b> ' + tr('Order of Merit') + (row.titles ? ' · <b>' + esc(row.titles) + '</b> ' + tr(row.titles === 1 ? 'title' : 'titles') : '') + '</div>');
       if (row.recent && row.recent.length) lines.push('<div class="form">' + row.recent.map(function (p) { return '<i class="' + medal(p) + '">' + esc(p) + '</i>'; }).join('') + '</div>');
     }
     var road = [];
@@ -710,14 +809,14 @@
         if (c.status !== 'done' || !c.winner || (c.home !== name && c.away !== name) || !c.home || !c.away) return;
         var home = c.home === name, won = (c.winner === 'home') === home, other = home ? c.away : c.home;
         var mine = home ? c.hs : c.as, theirs = home ? c.as : c.hs;
-        road.push((won ? 'Beat ' : 'Lost to ') + esc(other) + (mine != null && theirs != null ? ' ' + esc(mine) + '–' + esc(theirs) : ''));
+        road.push(tr(won ? 'Beat {name}' : 'Lost to {name}', { name: esc(other) }) + (mine != null && theirs != null ? ' ' + esc(mine) + '–' + esc(theirs) : ''));
       });
     });
     if (road.length) lines.push('<div class="road">' + road.slice(-3).join(' · ') + '</div>');
     return lines.length ? '<div><div class="nm">' + esc(name) + '</div>' + lines.join('') + '</div>' : '<div></div>';
   }
   function walkOn(f) {
-    var t = state && state.tournament, a = introFor(f.home, t), b = introFor(f.away, t);
+    var t = state && state.tournament, a = introFor(f.home, t, f.homeAvg), b = introFor(f.away, t, f.awayAvg);
     return a === '<div></div>' && b === '<div></div>' ? '' : a + '<div class="sp"></div>' + b;
   }
 
@@ -725,10 +824,10 @@
     var f = calls.shift(), el = document.getElementById('call');
     if (!f) { calling = false; return; }
     calling = true;
-    document.getElementById('callBoard').textContent = 'Board ' + f.board;
+    document.getElementById('callBoard').textContent = tr('Board {n}', { n: f.board });
     document.getElementById('callHome').textContent = f.home;
     document.getElementById('callAway').textContent = f.away;
-    document.getElementById('callRound').textContent = f.round;
+    document.getElementById('callRound').textContent = trRound(f.round);
     document.getElementById('callIntro').innerHTML = walkOn(f);
     sound('walkon', 8200);
     el.className = 'show';
@@ -745,14 +844,14 @@
     if (seenLeg === null) { seenLeg = l.key; if (!/[?&]leg(&|$)/.test(location.search)) return; }
     else if (seenLeg === l.key) return;
     seenLeg = l.key;
-    document.getElementById('legTitle').textContent = (l.sets ? 'Set ' + l.set + ' · ' : '') + 'Leg ' + l.leg;
-    document.getElementById('legWinner').textContent = l.winner + ' takes it';
-    document.getElementById('legFacts').textContent = l.darts + ' darts · ' + l.checkout + ' out';
+    document.getElementById('legTitle').textContent = (l.sets ? tr('Set {n}', { n: l.set }) + ' · ' : '') + tr('Leg {n}', { n: l.leg });
+    document.getElementById('legWinner').textContent = tr('{name} takes it', { name: l.winner });
+    document.getElementById('legFacts').textContent = tr('{n} darts \u00b7 {c} out', { n: l.darts, c: l.checkout });
     document.getElementById('legRace').innerHTML = raceChart(l);
     document.getElementById('legAverages').textContent = (l.averages || []).map(function (a) { return a.name + ' ' + (a.average || '—'); }).join('   ·   ');
     clearTimeout(legTimer);
     var preview0 = /[?&]leg(&|$)/.test(location.search);
-    if (!preview0 && l.checkout >= 100) callout(l.checkout + ' out', l.winner, true);
+    if (!preview0 && l.checkout >= 100) callout(tr('{n} out', { n: l.checkout }), l.winner, true);
     // The match result has its own sound; a leg on the way gets game shot, or the big-finish sting.
     if (!preview0 && !m.complete) sound(l.checkout >= 100 ? 'bigout' : 'leg');
     // After the checkout moment, not on top of it.
@@ -777,6 +876,7 @@
     lastText = text; state = next;
     connected = true;
     theme(state.theme);
+    setLang(state.lang);
     moment(state.match);
     noticeLeg(state.match);
     noticeCalls(state.tournament);

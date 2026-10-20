@@ -227,7 +227,8 @@
       rounds: this.rounds.map(function (r, ri) { return { name: ROUNDS[ri][0], matches: r.map(card) }; }) };
     this.rounds.forEach(function (r, ri) {
       r.forEach(function (f) {
-        if (f.live) t.live.push({ home: f.home[0], away: f.away[0], round: ROUNDS[ri][0], board: 1, score: null });
+        // The demo's career averages follow each player's skill.
+        if (f.live) t.live.push({ home: f.home[0], away: f.away[0], round: ROUNDS[ri][0], board: 1, score: null, homeAvg: (f.home[1] * .8).toFixed(1), awayAvg: (f.away[1] * .8).toFixed(1) });
         else if (f.home && f.away && !(f.m && f.m.done) && t.next.length < 2) t.next.push({ home: f.home[0], away: f.away[0], round: ROUNDS[ri][0], board: null, score: null });
       });
     });
@@ -257,7 +258,10 @@
 
   function run() {
     var night = new Night();
-    show({ match: null, tournament: null, merit: merit([]) });
+    // Before the first match: the idle slides, with an invented night so far.
+    show({ match: null, tournament: null, merit: merit([]), tonight: { matches: 6, highs: [
+      { label: 'Best average', name: 'Anna', value: '78.4' }, { label: 'Highest checkout', name: 'Chris', value: '121' },
+      { label: 'Most 180s', name: 'Thomas', value: '3' }, { label: 'Best leg', name: 'Anna', value: '15', darts: true }] } });
     // Watch live: the first semi-final and the final; the rest play off screen.
     var plan = [[0, 0, false], [0, 1, false], [0, 2, false], [0, 3, false], [1, 0, true], [1, 1, false], [2, 0, true]];
     var at = 0;
