@@ -780,6 +780,7 @@
     function head(p, i) {
       var active = i === m.current;
       return '<div class="hd' + (active ? ' active' : '') + '"><div class="nm">' + esc(p.name) + '</div>' +
+        (p.thrower ? '<div class="thrower">' + tr(active ? 'Throwing' : 'Next') + ': <b>' + esc(p.thrower) + '</b></div>' : '') +
         '<div class="pts num">' + esc(scoring ? p.score : marks(p, 0) + marks(p, 1) + marks(p, 2) + marks(p, 3) + marks(p, 4) + marks(p, 5) + marks(p, 6)) + '</div>' +
         '<div class="ds">' + (active ? m.darts.map(function (d) { return '<span class="num">' + esc(d) + '</span>'; }).join('') : '') + '</div></div>';
     }
