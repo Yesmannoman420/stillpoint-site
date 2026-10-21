@@ -1121,7 +1121,9 @@
   var SLOTS = ['walkon', '180', 'leg', 'bigout', 'match', 'champion'];
   // Sounds belong to the room's screen, not to every phone in it.
   var muted = pocket || /[?&]mute(&|$)/.test(location.search), sounds = {}, soundLocked = false;
-  function soundUrl(slot) { return location.pathname.replace(/\/[^\/]*\.html$/, '').replace(/\/$/, '') + '/sound/' + slot + '.mp3'; }
+  // On a Chromecast the phone sends its sounds over the Cast channel; they play from memory.
+  var castSounds = {};
+  function soundUrl(slot) { if (castSounds[slot]) return castSounds[slot]; return location.pathname.replace(/\/[^\/]*\.html$/, '').replace(/\/$/, '') + '/sound/' + slot + '.mp3'; }
   if (!muted && window.Audio) SLOTS.forEach(function (slot) {
     var a = new Audio();
     a.preload = 'auto';
@@ -1151,6 +1153,24 @@
         setTimeout(function () { fadeOut(a); }, each - 600);
       }, i * each);
     });
+  }
+  var soundParts = {};
+  function receiveSound(m) {
+    var got = soundParts[m.sound] = soundParts[m.sound] || [];
+    got[m.part] = m.data;
+    for (var i = 0; i < m.of; i++) if (got[i] === undefined) return;
+    delete soundParts[m.sound];
+    try {
+      var bin = atob(got.join('')), bytes = new Uint8Array(bin.length);
+      for (var j = 0; j < bin.length; j++) bytes[j] = bin.charCodeAt(j);
+      castSounds[m.sound] = URL.createObjectURL(new Blob([bytes], { type: m.type || 'audio/mpeg' }));
+    } catch (e) { return; }
+    if (SLOTS.indexOf(m.sound) >= 0 && !muted && window.Audio) {
+      var a = new Audio();
+      a.preload = 'auto';
+      a.addEventListener('canplaythrough', function () { sounds[m.sound] = a; }, { once: true });
+      a.src = castSounds[m.sound];
+    }
   }
   function fadeOut(a) {
     clearInterval(a.fading);
@@ -1649,6 +1669,7 @@
       castCtx = ctx;
       ctx.addCustomMessageListener('urn:x-cast:nl.thomas.stillpoint.live', function (e) {
         var m = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+        if (m.sound) { receiveSound(m); return; }
         if (m.of > 1) { parts[m.part] = m.data; if (m.part < m.of - 1) return; m.data = parts.join(''); parts = []; }
         accept(m.data);
       });
