@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Still Point · Darts, geteld</title>
+<meta name="description" content="Still Point scoort steeldarts met de camera van je telefoon, draait je toernooiavond, zet de wedstrijd op de tv in het café en laat iedereen meekijken op de eigen telefoon. Geen hardware, geen account, geen internet nodig.">
+<meta property="og:title" content="Still Point · Darts, geteld">
+<meta property="og:description" content="Zet een telefoon bij het bord. Still Point telt elke dart, draait het toernooi en zet de avond op de tv.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://stillpointdarts.com/assets/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b0d0c">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/home.css">
+<link rel="alternate" hreflang="nl" href="https://stillpointdarts.com/nl/">
+<link rel="alternate" hreflang="en" href="https://stillpointdarts.com/">
+<script>document.documentElement.className = 'js';</script>
+</head>
+<body>
+<a class="skip" href="#main">Naar de inhoud</a>
+<header class="top">
+  <a class="brand" href="./"><img src="../assets/mark-dark.svg" alt="" width="30" height="30">Still Point</a>
+  <nav aria-label="Main"><a href="#tv" class="hide-s">De tv</a><a href="guide.html">Gids</a><a href="../" lang="en" hreflang="en">EN</a></nav>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="say">
+      <h1 id="hero-title"><span class="ln"><span>Darts, geteld</span></span><span class="ln"><span>door je telefoon.</span></span></h1>
+      <div class="after">
+        <p class="lead">Zet een telefoon bij het bord en gooi. Still Point ziet elke dart, houdt de score bij, roept de finish om en zet de hele avond op de tv in het café.</p>
+        <div class="acts">
+          <a class="button go" href="#tv">Bekijk een clubavond</a>
+          <a class="button quiet" href="guide.html">Lees de gids</a>
+        </div>
+        <small>Voor Android, in test. Geen account, geen internet, geen extra hardware.</small>
+      </div>
+    </div>
+    <div class="play">
+      <div class="throw" data-ui>
+        <svg class="tboard" id="tboard" viewBox="-226 -226 452 452" role="img" aria-label="Een dartbord. Tik op een vlak om daar een dart te gooien; de score eronder telt hem zoals de app dat doet."></svg>
+        <div class="strip" id="strip" aria-live="polite">
+          <div class="who"><i></i>Jij · dubbel uit</div>
+          <div class="route" id="route"></div>
+          <div class="left" id="left">121</div>
+          <div></div>
+          <div class="cells"><span id="d0"></span><span id="d1"></span><span id="d2"></span><button type="button" id="again">Opnieuw beginnen</button></div>
+          <div class="say1" id="say1"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screens" aria-labelledby="screens-title">
+    <div class="head">
+      <h2 id="screens-title" data-in>Eén telefoon, de hele avond.</h2>
+      <p class="lead soft" data-in>Het scorebord, het toernooi, de ranglijst van de club en de cijfers van elke speler staan op de telefoon die het bord filmt. Dit zijn de echte schermen.</p>
+    </div>
+    <div class="row" id="row" tabindex="0" aria-label="Schermen uit de app; gebruik de pijltjestoetsen om te bewegen">
+      <figure data-name="Het scorebord" data-text="Elke dart komt in zijn vak terecht zoals de camera hem ziet, met de finish naast de score. Eén tik corrigeert een dart; het toetsenbord staat klaar als je liever typt."><img src="../assets/app-scoreboard.webp" width="540" height="1100" alt="Het live scorebord: Thomas op 298 na een enkele 3, Luca op 301, met het toetsenbord eronder." loading="lazy"></figure>
+      <figure data-name="Een clubavond" data-text="Wie op welk bord speelt, wat er hierna komt en elke uitslag terwijl de avond loopt. Corrigeer een uitslag en de wedstrijden die ervan afhingen staan weer klaar."><img src="../assets/app-hub.webp" width="540" height="955" alt="Een toernooioverzicht: Anna – Dave op bord 1, de uitslagen van de kwartfinales en een halve finale." loading="lazy"></figure>
+      <figure data-name="Het schema" data-text="Knock-out, dubbele eliminatie, competitie en poules met knock-out, voor 2 tot 64 spelers en tot acht borden. Uitslagen vullen het schema vanzelf."><img src="../assets/app-bracket.webp" width="540" height="585" alt="Een knock-outschema van de halve finales tot de finale, met Anna – Dave aan het spelen." loading="lazy"></figure>
+      <figure data-name="De Order of Merit" data-text="Elk afgerond toernooi levert punten op: tien voor de titel, zeven voor de finale, vijf voor de derde plaats. De ranglijst van de club houdt zichzelf bij over het hele seizoen."><img src="../assets/app-merit.webp" width="540" height="1100" alt="De Order of Merit met Thomas bovenaan met 17 punten, daarna Anna, Chris en Bram." loading="lazy"></figure>
+      <figure data-name="De carrière van een speler" data-text="Carrièregemiddelde, beste wedstrijd, beste leg, hoogste finish, 180's, vorm en rivalen, geteld uit elke wedstrijd op de telefoon."><img src="../assets/app-career.webp" width="540" height="1100" alt="De pagina van Thomas: een carrièregemiddelde van 92.0 over 12 wedstrijden, beste leg 6 darts, hoogste finish 121, vorm en rivalen." loading="lazy"></figure>
+      <figure data-name="Voortgang" data-text="Gemiddelden, eerste 9, finishes en scorebereiken, gemeten aan wat er echt gegooid is, nooit geraden."><img src="../assets/app-progress.webp" width="540" height="1100" alt="Voortgang van Thomas: een 3-dart gemiddelde van 112.9, eerste 9, gewonnen, beste leg en hoogste finish." loading="lazy"></figure>
+    </div>
+    <div class="now">
+      <h3 id="now-name">Het scorebord</h3>
+      <p id="now-text">Elke dart komt in zijn vak terecht zoals de camera hem ziet, met de finish naast de score. Eén tik corrigeert een dart; het toetsenbord staat klaar als je liever typt.</p>
+      <div class="nav"><button type="button" id="prev" aria-label="Vorig scherm">←</button><button type="button" id="next" aria-label="Volgend scherm">→</button></div>
+    </div>
+  </section>
+
+  <section class="tv" id="tv" aria-labelledby="tv-title" data-look="charcoal">
+    <div class="copy">
+      <h2 id="tv-title" data-in>De tv in het café, live.</h2>
+      <p class="lead soft" data-in>Open één adres op de tv, een beamer of een Chromecast. De zaal ziet de scores, de darts van deze beurt op een bord, de finish en wie elke leg won. Tussen de wedstrijden roept hij de volgende naar zijn bord, toont het schema en kroont de kampioen.</p>
+      <div class="look" data-ui role="group" aria-label="Het uiterlijk van het grote scherm, zoals gekozen op de telefoon" data-in>
+        <button type="button" data-look="charcoal" aria-pressed="true">Antraciet</button>
+        <button type="button" data-look="cream" aria-pressed="false">Crème</button>
+        <button type="button" data-look="pub" aria-pressed="false">Café</button>
+      </div>
+      <small class="soft" data-in>De echte pagina voor het grote scherm, met een gesimuleerde clubavond. <a href="../live/?demo&amp;lang=nl" target="_blank" rel="noopener">Open hem schermvullend</a>.</small>
+    </div>
+    <div class="frame" data-in><iframe id="tvframe" src="../live/?demo&lang=nl" title="Still Point Live op een tv, met een gesimuleerde clubavond" loading="lazy"></iframe></div>
+  </section>
+
+  <section class="chalk" aria-labelledby="chalk-title">
+    <figure class="big" data-in>
+      <img src="../assets/photo-pub-1974.jpg" width="1400" height="904" alt="Twee mannen bij het dartbord in een Londens café in 1974, met een krijtbord aan de muur naast het bord." loading="lazy">
+    </figure>
+    <div class="copy">
+      <h2 id="chalk-title" data-in>Het krijtbord deed de sommen.</h2>
+      <p class="lead soft" data-in>Een eeuw lang stond er iemand bij het bord die de score terugkrijtte vanaf 501. Still Point laat het spel zoals het is: de oche, drie darts, de dubbel om uit te gooien, de wandeling om ze eruit te halen. Het doet alleen het tellen, en het onthoudt.</p>
+      <figure data-in>
+        <img src="../assets/photo-pub-1937.jpg" width="1400" height="1374" alt="Een man gooit een dart in een Londens café in 1937 terwijl het publiek toekijkt." loading="lazy">
+        <figcaption>Londense cafés, 1937 en 1974.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="pocket" id="follow" aria-labelledby="follow-title">
+    <div class="copy">
+      <h2 id="follow-title" data-in>In ieders broekzak.</h2>
+      <p class="lead soft" data-in>De tv toont een code. Iedereen in de zaal scant hem en heeft de avond op de eigen telefoon: de scores zodra ze vallen, het schema, de tabel. Kies een naam en je ziet waar je staat, en je telefoon trilt als je naar een bord wordt geroepen.</p>
+      <p class="soft" data-in>Geen app en geen account voor wie meekijkt, alleen de eigen wifi van de telefoon.</p>
+    </div>
+    <div class="phone" data-in><iframe src="../live/?demo&amp;pocket&amp;lang=nl" title="Dezelfde live pagina op de telefoon van een toeschouwer, die de gesimuleerde avond volgt" loading="lazy"></iframe></div>
+    <figure class="photo" data-in>
+      <img src="../assets/photo-garden-vandepoll.jpg" width="1400" height="1359" alt="Een vrouw gooit een dart in een tuin terwijl haar man en zoon toekijken." loading="lazy">
+      <figcaption class="credit">Sepha van Beinum-Janssen gooit terwijl haar man en zoon toekijken. Foto van Willem van de Poll.</figcaption>
+    </figure>
+  </section>
+
+  <section class="night" aria-labelledby="night-title">
+    <h2 id="night-title" data-in>Een clubavond, van begin tot eind.</h2>
+    <div class="step" data-in>
+      <h3>Eerst typ je de namen.</h3>
+      <div class="call"><span>Thomas</span><span>Anna</span><span>Chris</span><span>Dave</span><span>Luca</span><span>Ben</span><em>Knock-out · willekeurig geloot</em></div>
+      <div class="resp"><img src="../assets/app-bracket.webp" width="540" height="585" alt="Het schema dat de app trekt, van de halve finales tot de finale." loading="lazy"></div>
+    </div>
+    <div class="step" data-in>
+      <h3>Dan roep je de wedstrijden op.</h3>
+      <div class="call"><em>Naar bord 2</em> Anna – Dave · Halve finale</div>
+      <div class="resp">
+        <div class="calltv" data-ui><div class="k">Nu op</div><div class="b">Bord 2</div><div class="vs">Anna<i>–</i>Dave</div><div class="r">Halve finale</div></div>
+      </div>
+    </div>
+    <div class="step" data-in>
+      <h3>Kroon ten slotte de kampioen.</h3>
+      <div class="call"><em>Finale</em> Thomas 3 – 2 Anna</div>
+      <div class="resp">
+        <div class="champ" data-ui>
+          <svg viewBox="0 0 120 120" aria-hidden="true"><path fill="#c9962e" d="M30 14h60v26c0 20-12 34-30 36-18-2-30-16-30-36z"/><path fill="none" stroke="#c9962e" stroke-width="7" d="M31 24H16v8c0 12 8 20 18 21M89 24h15v8c0 12-8 20-18 21"/><path fill="#a87a1f" d="M53 75h14v17H53z"/><path fill="#0b0d0c" d="M36 92h48v14H36z"/></svg>
+          <div class="k">Kampioen</div><div class="n">Thomas</div><div class="p">Tweede: Anna · 10 punten voor de Order of Merit</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bands" aria-label="Wat het nog meer doet">
+    <div class="band on"><div class="t"><h2 class="s">Elk bord krijgt een eigen telefoon.</h2><div class="c">Tot acht borden. De wedstrijdtafel stuurt elk bord zijn wedstrijd en roept hem om; uitslagen komen vanzelf terug in het schema.</div></div><button class="switch" data-ui role="switch" aria-checked="true" aria-label="Elk bord krijgt een eigen telefoon."></button></div>
+    <div class="band"><div class="t"><h2 class="s">Twee telefoons, één bord.</h2><div class="c">Een oude telefoon filmt het bord terwijl de jouwe de score in je hand houdt. Koppel één keer met een code; ze blijven gekoppeld, spel na spel.</div></div><button class="switch" data-ui role="switch" aria-checked="false" aria-label="Twee telefoons, één bord."></button></div>
+    <div class="band on"><div class="t"><h2 class="s">Oefenen dat je echt meet.</h2><div class="c">Rond de klok, Finishlab, Blackout, bull- en triple-oefeningen, elk gemeten tegen je eigen beste.</div></div><button class="switch" data-ui role="switch" aria-checked="true" aria-label="Oefenen dat je echt meet."></button></div>
+    <div class="band"><div class="t"><h2 class="s">Hij spreekt de score uit.</h2><div class="c">Beurttotalen, busts, de volgende speler en wedstrijdoproepen via de speaker van de telefoon, in het Engels of Nederlands.</div></div><button class="switch" data-ui role="switch" aria-checked="false" aria-label="Hij spreekt de score uit."></button></div>
+    <div class="band"><div class="t"><h2 class="s">Geen internet, geen account.</h2><div class="c">Wedstrijden, toernooien en de tv draaien op de telefoon en je eigen wifi of de hotspot. Een account is er alleen voor een back-up.</div></div><button class="switch" data-ui role="switch" aria-checked="false" aria-label="Geen internet, geen account."></button></div>
+  </section>
+
+  <section class="letter" id="privacy" aria-labelledby="privacy-title">
+    <div class="col">
+      <h2 id="privacy-title" data-in>Je darts blijven op je telefoon.</h2>
+      <p data-in><b>Camerabeelden worden nooit bewaard.</b> Beelden worden in het geheugen gelezen om de darts te vinden en daarna weggegooid. Een gekoppelde telefoon ziet een live beeld dat nooit wordt opgeslagen, en er wordt niets geüpload.</p>
+      <p data-in><b>Standaard lokaal.</b> De tweede telefoon, de bordtelefoons, de tv en de telefoons die meekijken praten met jouw telefoon via je eigen netwerk, nooit via een server.</p>
+      <p data-in><b>Geen account nodig.</b> Spelen, oefenen en toernooien werken zonder internet. Een account is optioneel, voor een privé-back-up en voor een wedstrijd die op de telefoon van een vriend is gespeeld.</p>
+      <p data-in><b>Geen advertenties, geen tracking.</b> Geen reclame, geen analytics, geen trackers. Niet in de app en niet op deze site, die niets van elders laadt.</p>
+      <p class="sign" data-in><a href="privacy.html">Het volledige privacybeleid</a></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="close-title">
+    <div class="close">
+      <div class="ph"><img src="../assets/photo-board-vandepoll.jpg" width="1400" height="1375" alt="Een vrouw haalt de darts uit een bord dat aan een houten schuur hangt." loading="lazy"></div>
+      <div class="tile" data-in>
+        <h2 id="close-title">Draai je eerste clubavond.</h2>
+        <p>Still Point is in test voor Android en staat nog niet op Google Play. De gids loopt een avond door, van de eerste naam tot de kampioen.</p>
+        <a class="button go" href="guide.html">Lees de gids</a>
+      </div>
+      <div class="flat"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>Steeldarts, gescoord met de camera.</span>
+  <nav aria-label="Footer"><a href="guide.html">Gids</a><a href="../live/?demo&amp;lang=nl">Live demo</a><a href="#follow">Meekijken</a></nav>
+  <span class="r">2026 · <a href="privacy.html">Privacy</a></span>
+  <p class="credits">Foto's: "Playing Darts" (Londen, 1974) van Klaus D. Peter, <a href="https://creativecommons.org/licenses/by/3.0/de/deed.en">CC BY 3.0</a>, via <a href="https://commons.wikimedia.org/wiki/File:Playing_Darts.jpg">Wikimedia Commons</a>. "Darts spelende man in een pub" (Londen, 1937) en twee foto's van Sepha van Beinum-Janssen die darts speelt, van Willem van de Poll, Nationaal Archief, CC0, via Wikimedia Commons. De schermen komen uit de app.</p>
+</footer>
+
+<script>
+(function () {
+  /* The hero board scores like the app: double out, busts back to the visit's start, and the app's own
+     checkout routes (exported from CheckoutRoutes). Regulation radii in millimetres. */
+  var ROUTES = {"1":{"2":"D1","4":"D2","6":"D3","8":"D4","10":"D5","12":"D6","14":"D7","16":"D8","18":"D9","20":"D10","22":"D11","24":"D12","26":"D13","28":"D14","30":"D15","32":"D16","34":"D17","36":"D18","38":"D19","40":"D20","50":"DB"},"2":{"2":"D1","3":"S1 D1","4":"D2","5":"S1 D2","6":"D3","7":"S3 D2","8":"D4","9":"S1 D4","10":"D5","11":"S3 D4","12":"D6","13":"S5 D4","14":"D7","15":"S7 D4","16":"D8","17":"S1 D8","18":"D9","19":"S3 D8","20":"D10","21":"S5 D8","22":"D11","23":"S7 D8","24":"D12","25":"S9 D8","26":"D13","27":"S11 D8","28":"D14","29":"S13 D8","30":"D15","31":"S15 D8","32":"D16","33":"S1 D16","34":"D17","35":"S3 D16","36":"D18","37":"S5 D16","38":"D19","39":"S7 D16","40":"D20","41":"S1 D20","42":"S2 D20","43":"S3 D20","44":"S4 D20","45":"S5 D20","46":"S6 D20","47":"S7 D20","48":"S8 D20","49":"S9 D20","50":"DB","51":"S11 D20","52":"S12 D20","53":"S13 D20","54":"S14 D20","55":"S15 D20","56":"S16 D20","57":"S17 D20","58":"T14 D8","59":"S19 D20","60":"S20 D20","61":"T15 D8","62":"T10 D16","63":"T13 D12","64":"T16 D8","65":"T11 D16","66":"T14 D12","67":"T17 D8","68":"T12 D16","69":"T15 D12","70":"T10 D20","71":"T17 D10","72":"T16 D12","73":"T11 D20","74":"T14 D16","75":"T17 D12","76":"T20 D8","77":"T15 D16","78":"T18 D12","79":"T13 D20","80":"T20 D10","81":"T19 D12","82":"T14 D20","83":"T17 D16","84":"T20 D12","85":"T15 D20","86":"T18 D16","87":"T17 D18","88":"T16 D20","89":"T19 D16","90":"T18 D18","91":"T17 D20","92":"T20 D16","93":"T19 D18","94":"T18 D20","95":"T19 D19","96":"T20 D18","97":"T19 D20","98":"T20 D19","100":"T20 D20","101":"T17 DB","104":"T18 DB","107":"T19 DB","110":"T20 DB"},"3":{"2":"D1","3":"S1 D1","4":"D2","5":"S1 D2","6":"D3","7":"S3 D2","8":"D4","9":"S1 D4","10":"D5","11":"S3 D4","12":"D6","13":"S5 D4","14":"D7","15":"S7 D4","16":"D8","17":"S1 D8","18":"D9","19":"S3 D8","20":"D10","21":"S5 D8","22":"D11","23":"S7 D8","24":"D12","25":"S9 D8","26":"D13","27":"S11 D8","28":"D14","29":"S13 D8","30":"D15","31":"S15 D8","32":"D16","33":"S1 D16","34":"D17","35":"S3 D16","36":"D18","37":"S5 D16","38":"D19","39":"S7 D16","40":"D20","41":"S1 D20","42":"S2 D20","43":"S3 D20","44":"S4 D20","45":"S5 D20","46":"S6 D20","47":"S7 D20","48":"S8 D20","49":"S9 D20","50":"DB","51":"S11 D20","52":"S12 D20","53":"S13 D20","54":"S14 D20","55":"S15 D20","56":"S16 D20","57":"S17 D20","58":"T14 D8","59":"S19 D20","60":"S20 D20","61":"T15 D8","62":"T10 D16","63":"T13 D12","64":"T16 D8","65":"T11 D16","66":"T14 D12","67":"T17 D8","68":"T12 D16","69":"T15 D12","70":"T10 D20","71":"T17 D10","72":"T16 D12","73":"T11 D20","74":"T14 D16","75":"T17 D12","76":"T20 D8","77":"T15 D16","78":"T18 D12","79":"T13 D20","80":"T20 D10","81":"T19 D12","82":"T14 D20","83":"T17 D16","84":"T20 D12","85":"T15 D20","86":"T18 D16","87":"T17 D18","88":"T16 D20","89":"T19 D16","90":"T18 D18","91":"T17 D20","92":"T20 D16","93":"T19 D18","94":"T18 D20","95":"T19 D19","96":"T20 D18","97":"T19 D20","98":"T20 D19","99":"T20 S7 D16","100":"T20 D20","101":"T17 DB","102":"T20 S2 D20","103":"T20 S3 D20","104":"T18 DB","105":"T20 S5 D20","106":"T20 S6 D20","107":"T19 DB","108":"T20 S8 D20","109":"T20 S9 D20","110":"T20 DB","111":"T20 S11 D20","112":"T20 S12 D20","113":"T20 S13 D20","114":"T20 S14 D20","115":"T20 S15 D20","116":"T20 S16 D20","117":"T20 S17 D20","118":"T20 T14 D8","119":"T20 S19 D20","120":"T20 S20 D20","121":"T17 T10 D20","122":"T20 T10 D16","123":"T20 T13 D12","124":"T18 T10 D20","125":"T20 T11 D16","126":"T20 T14 D12","127":"T20 T17 D8","128":"T20 T12 D16","129":"T20 T15 D12","130":"T20 T10 D20","131":"T20 T17 D10","132":"T20 T16 D12","133":"T20 T11 D20","134":"T20 T14 D16","135":"T20 T17 D12","136":"T20 T20 D8","137":"T20 T15 D16","138":"T20 T18 D12","139":"T20 T13 D20","140":"T20 T20 D10","141":"T20 T19 D12","142":"T20 T14 D20","143":"T20 T17 D16","144":"T20 T20 D12","145":"T20 T15 D20","146":"T20 T18 D16","147":"T20 T17 D18","148":"T20 T16 D20","149":"T20 T19 D16","150":"T20 T18 D18","151":"T20 T17 D20","152":"T20 T20 D16","153":"T20 T19 D18","154":"T20 T18 D20","155":"T20 T19 D19","156":"T20 T20 D18","157":"T20 T19 D20","158":"T20 T20 D19","160":"T20 T20 D20","161":"T20 T17 DB","164":"T20 T18 DB","167":"T20 T19 DB","170":"T20 T20 DB"}};
+  var ORDER = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5];
+  var START = 121, svg = document.getElementById('tboard');
+  var left, darts, visitStart, visitOver, done;
+  function pt(r, a) { a = a * Math.PI / 180; return (r * Math.cos(a)).toFixed(2) + ' ' + (r * Math.sin(a)).toFixed(2); }
+  function arc(r1, r2, a1, a2) { return 'M' + pt(r2, a1) + ' A' + r2 + ' ' + r2 + ' 0 0 1 ' + pt(r2, a2) + ' L' + pt(r1, a2) + ' A' + r1 + ' ' + r1 + ' 0 0 0 ' + pt(r1, a1) + 'Z'; }
+  var s = '<circle r="226" fill="#111412"/>';
+  ORDER.forEach(function (n, i) {
+    var a1 = -99 + i * 18, a2 = a1 + 18, even = i % 2 === 0;
+    var single = even ? '#1f2321' : '#4a4536', ring = even ? '#6b2620' : '#17573f';
+    [['D', 162, 170, ring, 'ring'], ['S', 107, 162, single, 'bed'], ['T', 99, 107, ring, 'ring'], ['S', 15.9, 99, single, 'bed']].forEach(function (b) {
+      s += '<path class="' + b[4] + '" data-hit="' + b[0] + n + '" d="' + arc(b[1], b[2], a1, a2) + '" fill="' + b[3] + '" stroke="#0b0d0c" stroke-width="1.4"/>';
+    });
+    var a = (-90 + i * 18) * Math.PI / 180;
+    s += '<text class="num" x="' + (196 * Math.cos(a)).toFixed(1) + '" y="' + (196 * Math.sin(a) + 9).toFixed(1) + '">' + n + '</text>';
+  });
+  s += '<circle class="ring" data-hit="SB" r="15.9" fill="#17573f" stroke="#0b0d0c" stroke-width="1.4"/><circle class="ring" data-hit="DB" r="6.35" fill="#6b2620" stroke="#0b0d0c" stroke-width="1.4"/><g id="pins"></g>';
+  svg.innerHTML = s;
+
+  function points(l) { if (l === 'SB') return 25; if (l === 'DB') return 50; return ' SDT'.indexOf(l.charAt(0)) * +l.slice(1); }
+  function isDouble(l) { return l === 'DB' || l.charAt(0) === 'D'; }
+  function say(l) { return l === 'SB' ? '25' : l === 'DB' ? 'Bull' : l.charAt(0) === 'S' ? l.slice(1) : l; }
+  function route(dartsLeft) { var r = ROUTES[dartsLeft] && ROUTES[dartsLeft][left]; return r ? r.split(' ').map(say).join(' ') : ''; }
+  function pinAt(d, n) {
+    if (d === 'SB' || d === 'DB') return n ? [(40 * Math.cos(n * 2)).toFixed(1), (40 * Math.sin(n * 2)).toFixed(1)] : [0, d === 'DB' ? 0 : -11];
+    var k = ORDER.indexOf(+d.slice(1)), t = d.charAt(0), r = t === 'T' ? 126 : t === 'D' ? 145 : 134, a = -90 + k * 18 + (n ? (n === 1 ? -6 : 6) : 0);
+    if (n) r += t === 'D' ? -24 : 24;
+    return [(r * Math.cos(a * Math.PI / 180)).toFixed(1), (r * Math.sin(a * Math.PI / 180)).toFixed(1)];
+  }
+  function draw(msg, cls) {
+    document.getElementById('left').textContent = left;
+    for (var i = 0; i < 3; i++) { var c = document.getElementById('d' + i); c.textContent = darts[i] ? say(darts[i]) : ''; c.className = i === darts.length && !done && !visitOver ? 'next' : ''; }
+    document.getElementById('route').textContent = done ? '' : route(visitOver ? 3 : 3 - darts.length);
+    document.getElementById('say1').textContent = msg;
+    document.getElementById('strip').className = 'strip' + (cls ? ' ' + cls : '');
+    [].forEach.call(svg.querySelectorAll('.lit'), function (p) { p.classList.remove('lit'); });
+    var pins = '';
+    darts.forEach(function (d, i) {
+      [].forEach.call(svg.querySelectorAll('[data-hit="' + d + '"]'), function (p) { p.classList.add('lit'); });
+      var at = pinAt(d, darts.slice(0, i).filter(function (x) { return x === d; }).length);
+      pins += '<g class="pin"><circle cx="' + at[0] + '" cy="' + at[1] + '" r="15"/><text x="' + at[0] + '" y="' + at[1] + '">' + (i + 1) + '</text></g>';
+    });
+    document.getElementById('pins').innerHTML = pins;
+  }
+  function reset() { left = visitStart = START; darts = []; visitOver = done = false; draw('Tik op het bord om te gooien. Nog 121, drie darts per beurt.'); }
+  function throwAt(l) {
+    if (done) return;
+    if (visitOver) { darts = []; visitStart = left; visitOver = false; }
+    darts.push(l);
+    var after = left - points(l);
+    if (after === 0 && isDouble(l)) { left = 0; done = true; return draw('Game shot: uitgegooid met ' + say(l) + '. Begin opnieuw voor nog een poging.', 'won'); }
+    if (after < 2) {
+      // A bust counts for nothing: the score goes back to where the visit started.
+      var why = after < 0 ? (-after) + ' te veel' : after === 1 ? 'laat 1 over' : 'geen dubbel';
+      left = visitStart; visitOver = true;
+      return draw('Bust · ' + why + ' · terug naar ' + left + '.', 'bust');
+    }
+    left = after;
+    if (darts.length === 3) { visitOver = true; return draw('Beurt voorbij: ' + (visitStart - left) + ' gescoord. Haal je darts eruit en gooi opnieuw.'); }
+    var r = route(3 - darts.length);
+    draw(say(l) + ' voor ' + points(l) + '. ' + (r ? 'De finish: ' + r + '.' : 'Geen finish met de overgebleven darts; zet een goede dubbel klaar.'));
+  }
+  svg.addEventListener('click', function (e) { var h = e.target.closest && e.target.closest('[data-hit]'); if (h) throwAt(h.getAttribute('data-hit')); });
+  document.getElementById('again').addEventListener('click', reset);
+  reset();
+
+  /* The row of screens: the centred one is lit and named. */
+  var row = document.getElementById('row'), figs = [].slice.call(row.querySelectorAll('figure')), shown = -1;
+  function centred() {
+    var mid = row.scrollLeft + row.clientWidth / 2, best = 0, dist = 1e9;
+    figs.forEach(function (f, i) { var d = Math.abs(f.offsetLeft + f.offsetWidth / 2 - mid); if (d < dist) { dist = d; best = i; } });
+    return best;
+  }
+  function light() {
+    var i = centred(); if (i === shown) return; shown = i;
+    figs.forEach(function (f, j) { f.classList.toggle('on', j === i); });
+    document.getElementById('now-name').textContent = figs[i].getAttribute('data-name');
+    document.getElementById('now-text').textContent = figs[i].getAttribute('data-text');
+  }
+  function go(d) { var i = Math.max(0, Math.min(figs.length - 1, centred() + d)); row.scrollTo({ left: figs[i].offsetLeft + figs[i].offsetWidth / 2 - row.clientWidth / 2, behavior: 'smooth' }); }
+  row.addEventListener('scroll', function () { requestAnimationFrame(light); }, { passive: true });
+  row.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { go(1); e.preventDefault(); } if (e.key === 'ArrowLeft') { go(-1); e.preventDefault(); } });
+  document.getElementById('prev').addEventListener('click', function () { go(-1); });
+  document.getElementById('next').addEventListener('click', function () { go(1); });
+  window.addEventListener('resize', function () { shown = -1; light(); });
+  light();
+
+  /* The Look control: the real big screen changes with it, and so does this section. */
+  var tv = document.getElementById('tv'), frame = document.getElementById('tvframe'), looks = [].slice.call(document.querySelectorAll('.look button'));
+  looks.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var look = b.getAttribute('data-look');
+      looks.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      tv.setAttribute('data-look', look);
+      frame.src = '../live/?demo&lang=nl' + (look === 'charcoal' ? '' : '&theme=' + look);
+    });
+  });
+
+  /* Each switch opens its band's consequence. */
+  [].forEach.call(document.querySelectorAll('.switch'), function (sw) {
+    sw.addEventListener('click', function () {
+      var on = sw.getAttribute('aria-checked') !== 'true';
+      sw.setAttribute('aria-checked', String(on)); sw.closest('.band').classList.toggle('on', on);
+    });
+  });
+
+  /* Entrances: each section's parts rise in order, once. */
+  var items = [].slice.call(document.querySelectorAll('[data-in]'));
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var sib = [].filter.call(e.target.parentNode.children, function (x) { return x.hasAttribute('data-in'); }), k = Math.max(0, sib.indexOf(e.target));
+        e.target.style.transitionDelay = (k * 80) + 'ms'; e.target.classList.add('in'); io.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    items.forEach(function (el) { io.observe(el); });
+  } else items.forEach(function (el) { el.classList.add('in'); });
+})();
+</script>
+</body>
+</html>

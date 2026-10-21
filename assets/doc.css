@@ -1,0 +1,46 @@
+/* Long reads (the guide, privacy): the home page's tokens and type, set for reading. Loaded after home.css. */
+.doc-page .top { position: static; }
+.doc-head { padding: clamp(32px, 6vw, 88px) var(--m) clamp(28px, 4vw, 56px); border-bottom: 1px solid var(--raised); }
+.doc-head h1 { font-size: var(--s-hero); max-width: 14ch; }
+.doc-head .lead { color: var(--muted); max-width: 40ch; margin-top: 20px; }
+.doc-head .stamp { margin-top: 18px; font-size: var(--s-small); color: var(--muted); }
+
+.doc-body { display: grid; grid-template-columns: minmax(180px, 240px) minmax(0, 68ch); gap: clamp(32px, 6vw, 96px); padding: clamp(32px, 5vw, 72px) var(--m) 0; }
+.toc { position: sticky; top: 24px; align-self: start; display: flex; flex-direction: column; gap: 2px; font-size: 15px; }
+.toc b { font-size: var(--s-small); color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+.toc a { color: var(--muted); text-decoration: none; padding: 6px 0 6px 14px; border-left: 2px solid var(--raised); transition: color .2s, border-color .2s; }
+.toc a:hover { color: var(--white); }
+.toc a.here { color: var(--white); border-left-color: var(--green); }
+
+.prose > section { scroll-margin-top: 24px; padding-bottom: clamp(36px, 5vw, 64px); }
+.prose h2 { font-size: clamp(30px, 1.2rem + 2vw, 46px); margin-bottom: 20px; }
+.prose h3 { font-family: var(--text); font-weight: 700; letter-spacing: 0; font-size: var(--s-body); margin: 24px 0 6px; color: var(--white); }
+.prose p { margin: 0 0 14px; }
+.prose p, .prose li { color: var(--white); }
+.prose ul, .prose ol { list-style: none; padding: 0; margin: 0 0 14px; display: flex; flex-direction: column; gap: 12px; }
+.prose ul li { padding-left: 22px; position: relative; }
+.prose ul li::before { content: ""; position: absolute; left: 0; top: .72em; width: 10px; height: 2px; background: var(--green); }
+.prose ol { counter-reset: step; }
+.prose ol li { counter-increment: step; padding-left: 40px; position: relative; }
+.prose ol li::before { content: counter(step); position: absolute; left: 0; top: .1em; width: 26px; height: 26px; border-radius: 50%; background: var(--green-deep); color: var(--green);
+  font: 14px/26px var(--display); text-align: center; }
+.prose strong { color: var(--paper); }
+.prose a { color: var(--green); text-underline-offset: 3px; }
+.prose code { background: var(--raised); padding: 2px 6px; border-radius: 4px; font-size: .9em; }
+.prose .note { background: var(--surface); border-left: 3px solid var(--green); border-radius: 0 var(--r) var(--r) 0; padding: 18px 22px; margin: 6px 0 18px; }
+.prose .note p:last-child { margin-bottom: 0; }
+.prose .short { background: var(--green-deep); border-radius: var(--r); padding: 22px 24px; margin-bottom: clamp(36px, 5vw, 64px); font-size: var(--s-lead); line-height: 1.45; }
+
+.prose figure { margin: 8px 0 22px; display: flex; gap: 22px; align-items: flex-end; }
+.prose figure img { width: min(240px, 46%); height: auto; border-radius: 18px; border: 1px solid var(--raised); background: var(--surface); }
+.prose figcaption { font-size: var(--s-small); color: var(--muted); max-width: 26ch; }
+
+.doc-page .foot { padding-top: clamp(64px, 10vw, 140px); }
+
+@media (max-width: 900px) {
+  .doc-body { grid-template-columns: minmax(0, 1fr); }
+  .toc { position: static; flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  .toc b { width: 100%; margin-bottom: 0; }
+  .toc a { border: 0; background: var(--surface); border-radius: 999px; padding: 8px 14px; }
+  .toc a.here { background: var(--green-deep); }
+}

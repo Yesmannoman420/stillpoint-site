@@ -743,7 +743,7 @@
     var side = (m.partners || []).filter(function (s) { return s.name === name; })[0];
     if (!side || !side.partners || !side.partners.length) return '';
     return '<div class="prt">' + side.partners.map(function (p) {
-      return '<span><b>' + esc(p.name) + '</b> ' + esc(p.average || '\u2014') + (p.t180 ? ' \u00b7 180\u00d7' + p.t180 : '') + (p.highOut ? ' \u00b7 ' + esc(tr('{n} out', { n: p.highOut })) : '') + '</span>';
+      return '<span><b>' + esc(p.name) + '</b> ' + esc(p.average || '\u2014') + (p.cricket ? ' ' + tr('MPR') : '') + (p.t180 ? ' \u00b7 180\u00d7' + p.t180 : '') + (p.highOut ? ' \u00b7 ' + esc(tr('{n} out', { n: p.highOut })) : '') + '</span>';
     }).join('') + '</div>';
   }
   function checkoutText(s) { return s.checkoutRate ? s.checkoutRate : s.finishes ? tr('{n} out', { n: s.finishes }) : '—'; }
@@ -817,7 +817,7 @@
           if (m.mode === 'CRICKET' || m.mode === 'CRICKET_NO_SCORE') {
             var mk = (p.marks || []).reduce(function (a, b) { return a + b; }, 0);
             return '<div class="card' + (p.name === winner ? ' win' : '') + '"><div class="nm">' + esc(p.name) + '</div><div class="av num">' + esc(m.mode === 'CRICKET' ? p.score : mk) +
-              '</div><div class="lg">' + tr(m.mode === 'CRICKET' ? 'points' : 'marks') + (m.mode === 'CRICKET' ? ' · ' + mk + ' ' + tr('marks') : '') + '</div></div>';
+              '</div><div class="lg">' + tr(m.mode === 'CRICKET' ? 'points' : 'marks') + (m.mode === 'CRICKET' ? ' · ' + mk + ' ' + tr('marks') : '') + '</div>' + partnerLine(m, p.name) + '</div>';
           }
           return '<div class="card' + (p.name === winner ? ' win' : '') + '"><div class="nm">' + esc(p.name) + '</div><div class="av num">' + esc(p.average || '—') +
             '</div><div class="lg">' + tr('3-dart average') + (m.showLegs ? ' · ' + (p.sets ? tr('{n} sets', { n: p.sets }) + ' · ' : '') + p.legs + ' ' + tr(p.legs === 1 ? 'leg' : 'legs') : '') + '</div>' +
