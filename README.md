@@ -14,4 +14,8 @@ The Cast receiver is `https://stillpointdarts.com/live/?cast`, registered in the
 
 `live/index.html` is a copy of the app's big-screen page (`app/src/main/assets/bigscreen/index.html`); `live/?demo` loads `live/demo.js`, which plays a simulated club night (an eight-player knockout with the semi-final and final shown dart by dart) through the page's own rendering. The landing page embeds it in the Big screen section. After changing the app's page, run `python tools/sync_live_page.py`; CI fails while the copy is stale. `live/?demo&fast` runs the night at about four times the speed, for checks.
 
+## Home page
+
+`index.html` with `assets/home.css` (the guide and privacy pages keep `assets/site.css`). It follows the "product performs" direction: the hero is a working dartboard that scores taps the way the app does (double out, busts, and the app's own checkout routes, exported from `core/CheckoutRoutes` with a one-off Java program and inlined, so re-export them when the routes change); the screens row uses real app screenshots (`assets/app-*.webp`, captured on the emulator in English); the TV and phone sections embed `live/?demo` and `live/?demo&pocket`; the Look control reloads the TV demo with `&theme=`. Photographs are open-licence archive pictures, credited in the footer and listed with their sources in `assets/credits.json` (Klaus D. Peter, CC BY 3.0; Willem van de Poll, Nationaal Archief, CC0). Nothing is loaded from another site. Check it with the taste skill's `inspect.mjs` at 1440, 768 and 390.
+
 Brand files: `assets/mark-dark.svg` is the target-and-dart mark for dark grounds, `assets/icon.svg` the favicon (the launcher icon), `assets/share.jpg` the 1200×630 link preview. Sources are in `brand/`.
