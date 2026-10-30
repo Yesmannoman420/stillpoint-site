@@ -603,12 +603,14 @@
     '<path fill="#a87a1f" d="M53 75h14v17H53z"/><path fill="#0b0d0c" d="M36 92h48v14H36z"/><path fill="#f4ecd6" opacity=".35" d="M40 20h9v26c0 9 3 16 8 21-10-3-17-11-17-21z"/></svg>';
 
   var demo = /[?&]demo(&|$)/.test(location.search), casting = /[?&]cast(&|$)/.test(location.search);
+  // Following from anywhere: the state comes from the hosted service, not from a phone on this network.
+  var feed = (location.search.match(/[?&]feed=([0-9a-f]{32})/) || [])[1];
   // A phone in the room gets the pocket layout; a TV, projector, turned screen or the website demo keeps the big one.
   var pocket = /[?&]pocket(&|$)/.test(location.search) || (!demo && !casting && !/[?&]tv(&|$)/.test(location.search) && Math.min(window.innerWidth, screen.width || 9999) < 760);
   if (pocket) document.documentElement.className = 'pocket';
   /* The code for anyone in the room, only where the phone itself serves the page (not the website demo, not a Chromecast). */
   function follow(text) {
-    if (demo || casting || pocket || /[?&]noqr(&|$)/.test(location.search)) return '';
+    if (demo || casting || pocket || feed || /[?&]noqr(&|$)/.test(location.search)) return '';
     return '<div class="follow"><img src="' + location.pathname.replace(/\/$/, '') + '/qr.svg" alt="' + esc(tr('Follow on your phone')) + '"><div><b>' + tr('Follow on your phone') + '</b>' + tr(text) + '</div></div>';
   }
   function footer() {
@@ -1095,7 +1097,7 @@
       '<li><b>' + tr('Throw.') + '</b> ' + tr('The camera counts every dart; the room sees the score and the checkout.') + '</li>' +
       '<li><b>' + tr('Run a tournament') + '</b> ' + tr('and this screen calls the matches and crowns the champion.') + '</li></ol>' + follow('Scan for the bracket and your next match') + '</div>';
     else body = '<div class="slide">' + mark('brandmark') + '<div class="copy"><div class="word">Still<br>Point</div>' +
-      '<div class="hint">' + tr(state ? 'Start a match or open a tournament on the phone. It appears here at once.' : 'Connecting to the phone…') + '</div></div></div>';
+      '<div class="hint">' + tr(state ? 'Start a match or open a tournament on the phone. It appears here at once.' : ended ? 'This link has ended' : 'Connecting to the phone…') + '</div></div></div>';
     var dots = list.length > 1 ? '<div class="dots">' + list.map(function (k, i) { return '<i class="' + (i === which ? 'on' : '') + '"></i>'; }).join('') + '</div>' : '';
     return '<main><div class="attract">' + body + dots + '</div></main>' + footer();
   }
@@ -1121,7 +1123,7 @@
      only plays after a click gets one hint in the footer, and only when there is something to play. */
   var SLOTS = ['walkon', '180', 'leg', 'bigout', 'match', 'champion'];
   // Sounds belong to the room's screen, not to every phone in it.
-  var muted = pocket || /[?&]mute(&|$)/.test(location.search), sounds = {}, soundLocked = false;
+  var muted = pocket || feed || /[?&]mute(&|$)/.test(location.search), sounds = {}, soundLocked = false;
   // On a Chromecast the phone sends its sounds over the Cast channel; they play from memory.
   var castSounds = {};
   function soundUrl(slot) { if (castSounds[slot]) return castSounds[slot]; return location.pathname.replace(/\/[^\/]*\.html$/, '').replace(/\/$/, '') + '/sound/' + slot + '.mp3'; }
@@ -1404,7 +1406,7 @@
   function renderPocket() {
     var out = ptop();
     if (ended) out += '<div class="pnow"><div class="h">' + tr('This link has ended') + '</div><div class="s">' + tr('The big screen was restarted on the phone. Scan the new code on the TV.') + '</div></div>';
-    if (!state) out += '<div class="pempty">' + tr('Connecting to the phone…') + '</div>';
+    if (!state) out += '<div class="pempty">' + tr(ended ? 'This link has ended' : 'Connecting to the phone…') + '</div>';
     else {
       out += pnow();
       if (state.match) out += pmatch(state.match);
@@ -1657,7 +1659,32 @@
   }
   window.addEventListener('resize', function () { if (!pocket) render(); });
   // ?poll asks for plain polling: older TV browsers, and still captures of the page.
-  if (demo) {
+  if (feed) {
+    // The address and key are public; the service only ever answers for this one link.
+    var feedApi = /^(127\.0\.0\.1|localhost)$/.test(location.hostname) ? '' : 'https://iclctbyfykeugjzewoqq.supabase.co';
+    var feedVersion = 0;
+    var followFeed = function () {
+      var x = new XMLHttpRequest();
+      x.open('POST', feedApi + '/rest/v1/rpc/stillpoint_live_read');
+      x.setRequestHeader('Content-Type', 'application/json');
+      x.setRequestHeader('apikey', 'sb_publishable_t_gzPcKIDAjFIPSzxzR4sw_4aSQQrTc');
+      x.onload = function () {
+        var answer = null;
+        try { answer = JSON.parse(x.responseText); } catch (e) {}
+        if (x.status === 200 && answer) {
+          ended = false;
+          if (answer.state) { feedVersion = answer.version; accept(answer.state); }
+          else if (!connected) { connected = true; render(); }
+        } else if (x.status === 200 && !ended) { ended = true; connected = false; render(); }
+        setTimeout(followFeed, ended ? 15000 : 3000);
+      };
+      x.onerror = function () { connected = false; render(); setTimeout(followFeed, 6000); };
+      // A hidden tab asks for nothing, so a phone in a pocket costs nothing.
+      if (document.hidden) { setTimeout(followFeed, 3000); return; }
+      x.send(JSON.stringify({ p_token: feed, p_since: feedVersion }));
+    };
+    followFeed();
+  } else if (demo) {
     var sim = document.createElement('script');
     sim.src = 'demo.js';
     document.body.appendChild(sim);
