@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Join a match · Still Point</title>
+<meta name="description" content="You're invited to play darts on Still Point, each at your own board.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b0d0c">
+<link rel="icon" href="../assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/home.css">
+<style>
+  .join { box-sizing: border-box; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; gap: 20px; padding: 32px 16px; width: 100%; max-width: 30rem; margin: 0 auto; }
+  .join .brand { display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; color: inherit; text-decoration: none; font-weight: 700; }
+  .join h1 { margin: 0; font-size: clamp(2.5rem, 11vw, 4rem); line-height: 1; }
+  .join p { margin: 0; }
+  .join .code { font-size: clamp(2.75rem, 15vw, 4.5rem); letter-spacing: .08em; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .join .open { display: block; padding: 18px 24px; border-radius: 16px; background: #00d884; color: #0b0d0c; font-weight: 700; text-align: center; text-decoration: none; }
+  .join small { opacity: .75; }
+</style>
+</head>
+<body>
+<main class="join">
+  <a class="brand" href="../"><img src="../assets/mark-dark.svg" alt="" width="30" height="30">Still Point</a>
+  <h1 id="title">You're invited</h1>
+  <p id="lead">Each of you throws at your own board. Open this in the app to join.</p>
+  <p class="code" id="code" hidden></p>
+  <a class="open" id="open" hidden>Open in Still Point</a>
+  <small id="fallback">No app opening? In Still Point go to Play, then Play online, and enter the code.</small>
+</main>
+<script>
+  // Only a well-formed code ever reaches the page or the link.
+  const query = new URLSearchParams(location.search);
+  const valid = code => /^[A-HJ-NP-Z2-9]{6}$/.test(code || '') ? code : null;
+  const room = valid(query.get('code'));
+  const tournament = valid(query.get('t'));
+  const code = room || tournament;
+  const dutch = (query.get('lang') || navigator.language || '').toLowerCase().startsWith('nl');
+  const say = (id, text) => { document.getElementById(id).textContent = text; };
+  if (dutch) {
+    document.documentElement.lang = 'nl';
+    say('title', 'Je bent uitgenodigd');
+    say('lead', 'Jullie gooien allebei op je eigen bord. Open dit in de app om mee te doen.');
+    say('open', 'Openen in Still Point');
+    say('fallback', 'Opent de app niet? Ga in Still Point naar Spelen, dan Online spelen, en vul de code in.');
+  }
+  if (code) {
+    say('code', code);
+    document.getElementById('code').hidden = false;
+    const open = document.getElementById('open');
+    open.href = 'stillpoint://join/' + (tournament && !room ? 't/' : '') + code;
+    open.hidden = false;
+  } else {
+    say('lead', dutch ? 'In deze link staat geen geldige code. Vraag om een nieuwe.' : "This link has no valid code. Ask for a new one.");
+    document.getElementById('fallback').hidden = true;
+  }
+</script>
+</body>
+</html>
